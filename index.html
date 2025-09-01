@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor Dailymotion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .video-thumbnail {
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .video-thumbnail:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            display: block;
+        }
+
+        .video-title {
+            padding: 10px;
+            text-align: center;
+            background-color: #2b2b2b;
+        }
+
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .fullscreen-overlay.show {
+            display: flex;
+        }
+
+        .fullscreen-overlay iframe {
+            width: 90%;
+            height: 90%;
+            border: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1001;
+            background: none;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-container" id="video-grid">
+        </div>
+
+    <div class="fullscreen-overlay" id="video-player-overlay">
+        <button class="close-btn" id="close-player">&times;</button>
+        <iframe id="video-player" src="" allowfullscreen allow="autoplay"></iframe>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoData = [
+                {
+                    title: "Huevos rancheros",
+                    id: "x9clz42"
+                },
+                {
+                    title: "La pulquieria 1",
+                    id: "x9awrem"
+                },
+                {
+                    title: "Ginecologo de señoritas",
+                    id: "x9j77vy"
+                },
+                {
+                    title: "Las calenturas de un fantasma",
+                    id: "x9lp98g"
+                },
+                {
+                    title: "Un trailero mujeriego",
+                    id: "x9jcg4y"
+                },
+                {
+                    title: "Night Of The Dead Sorority Babes",
+                    id: "x9g9e0u"
+                },
+                {
+                    title: "Animal instinct",
+                    id: "x8ijd02"
+                },
+                {
+                    title: "Suicide girls",
+                    id: "x13thsm"
+                },
+                {
+                    title: "40 degrees under the sheet",
+                    id: "x9fhpve"
+                },
+                {
+                    title: "Howard Stern",
+                    id: "x2g24z0"
+                },
+                {
+                    title: "Howard Stern",
+                    id: "x2ej15e"
+                },
+                {
+                    title: "Howard Stern",
+                    id: "x5o56jg"
+                },
+                {
+                    title: "Colpo Grosso",
+                    id: "x6uk99o"
+                },
+                {
+                    title: "Colpo Grosso",
+                    id: "x4qp9cu"
+                },
+                {
+                    title: "Colpo Grosso",
+                    id: "x51y1to"
+                },
+                {
+                    title: "",
+                    id: ""
+                },
+                {
+                    title: "",
+                    id: ""
+                },
+                {
+                    title: "",
+                    id: ""
+                },
+                {
+                    title: "",
+                    id: ""
+                },
+                {
+                    title: "",
+                    id: ""
+                }
+                // Añade o elimina videos de esta lista. Solo necesitas el título y el ID.
+            ];
+
+            const gridContainer = document.getElementById('video-grid');
+            const overlay = document.getElementById('video-player-overlay');
+            const player = document.getElementById('video-player');
+            const closeBtn = document.getElementById('close-player');
+
+            function createThumbnail(video) {
+                const thumbnailDiv = document.createElement('div');
+                thumbnailDiv.classList.add('video-thumbnail');
+                thumbnailDiv.dataset.videoId = video.id;
+
+                const img = document.createElement('img');
+                img.src = `https://www.dailymotion.com/thumbnail/video/${video.id}`;
+                img.alt = `Miniatura de ${video.title}`;
+
+                const titleDiv = document.createElement('div');
+                titleDiv.classList.add('video-title');
+                titleDiv.textContent = video.title;
+
+                thumbnailDiv.appendChild(img);
+                thumbnailDiv.appendChild(titleDiv);
+                
+                thumbnailDiv.addEventListener('click', () => {
+                    playVideo(video.id);
+                });
+
+                return thumbnailDiv;
+            }
+
+            function playVideo(videoId) {
+                const embedUrl = `https://geo.dailymotion.com/player.html?video=${videoId}&autoplay=1`;
+                player.src = embedUrl;
+                overlay.classList.add('show');
+            }
+
+            closeBtn.addEventListener('click', () => {
+                player.src = '';
+                overlay.classList.remove('show');
+            });
+
+            videoData.forEach(video => {
+                gridContainer.appendChild(createThumbnail(video));
+            });
+        });
+    </script>
+</body>
+</html>
